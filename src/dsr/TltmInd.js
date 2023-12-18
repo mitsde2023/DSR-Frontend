@@ -16,7 +16,7 @@ function TltmInd() {
     useEffect(() => {
         async function fetchHierarchyData() {
             try {
-                const hierarchyData = await axios.get('http://localhost:9000/dsr_report/hierarchical-data-filter');
+                const hierarchyData = await axios.get('http://65.1.54.123:9000/dsr_report/hierarchical-data-filter');
                 setMonth(hierarchyData.data.uniqueMonths);
                 setFilterData(hierarchyData.data.hierarchicalData);
             } catch (error) {
@@ -29,9 +29,6 @@ function TltmInd() {
 
     const handleSalesManagerChange = (event) => {
         const value = event.target.value;
-        // localStorage.setItem('selectedSalesManager', value);
-        // localStorage.removeItem('selectedTeamManager');
-        // localStorage.removeItem('selectedTeamLeader');
         setSelectedSalesManager(value);
         setSelectedTeamManager('');
         setSelectedTeamLeader('');
@@ -39,15 +36,12 @@ function TltmInd() {
 
     const handleTeamManagerChange = (event) => {
         const value = event.target.value;
-        // localStorage.setItem('selectedTeamManager', value);
-        // localStorage.removeItem('selectedTeamLeader');
         setSelectedTeamManager(value);
         setSelectedTeamLeader('');
     };
 
     const handleTeamLeaderChange = (event) => {
         const value = event.target.value;
-        // localStorage.setItem('selectedTeamLeader', value);
         setSelectedTeamLeader(value);
     };
 
@@ -132,7 +126,6 @@ function TltmInd() {
         );
     };
 
-    // console.log(selectedSalesManager, selectedTeamManager, selectedTeamLeader, 112)
     useEffect(() => {
 
         const params = {
@@ -149,7 +142,7 @@ function TltmInd() {
 
         const fetchTltmInData = async () => {
             try {
-                const response = await axios.get(`http://localhost:9000/dsr_report/tltm-in?${queryString}`);
+                const response = await axios.get(`http://65.1.54.123:9000/dsr_report/tltm-in?${queryString}`);
                 const tltmInData = response.data;
                 settltmdata(tltmInData);
             } catch (error) {
@@ -345,7 +338,7 @@ function TltmInd() {
     return (
         <>
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                <span className="navbar-brand d-flex ms-2" href="#">
+                <span className="navbar-brand d-flex ms-2" href="#logo">
                     <img style={{ width: "140px" }} src='https://res.cloudinary.com/dtgpxvmpl/image/upload/v1702100329/mitsde_logo_vmzo63.png' alt="MITSDE logo" />
                     <small className='ms-2'>{renderMonthDropdown()}</small>
                 </span>

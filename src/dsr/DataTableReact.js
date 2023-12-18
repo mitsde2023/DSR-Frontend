@@ -10,7 +10,7 @@ function DataTableReact() {
     useEffect(() => {
         async function fetchHierarchyData() {
             try {
-                const hierarchyData = await axios.get('http://localhost:9000/dsr_report/hierarchical-data-filter');
+                const hierarchyData = await axios.get('http://65.1.54.123:9000/dsr_report/hierarchical-data-filter');
                 setData(hierarchyData.data);
             } catch (error) {
                 console.error('Error fetching hierarchical data:', error);

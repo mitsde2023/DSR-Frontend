@@ -16,8 +16,8 @@ const UploadComponent = () => {
 
   const { getRootProps: getRootPropsExcel, getInputProps: getInputPropsExcel } = useDropzone({
     onDrop: onDropExcel,
-    accept: '.xlsx', // Adjust to the accepted file type
-    maxFiles: 1, // Allow only one file to be uploaded
+    accept: '.xlsx',
+    maxFiles: 1,
   });
 
   const { getRootProps: getRootPropsUpload, getInputProps: getInputPropsUpload } = useDropzone({
@@ -36,7 +36,7 @@ const UploadComponent = () => {
     formData.append('excelFile', excelFile);
 
     try {
-      await axios.post('http://localhost:9000/summary/upload', formData);
+      await axios.post('http://65.1.54.123:9000/summary/upload', formData);
       alert('Excel file uploaded successfully!');
     } catch (error) {
       console.error('Error uploading Excel file:', error.message);
@@ -54,7 +54,7 @@ const UploadComponent = () => {
     formData.append('excelFile', uploadFile);
 
     try {
-      await axios.post('http://localhost:9000/upload', formData);
+      await axios.post('http://65.1.54.123:9000/upload', formData);
       alert('File uploaded successfully!');
     } catch (error) {
       console.error('Error uploading file:', error.message);
@@ -68,7 +68,7 @@ const UploadComponent = () => {
 
     if (isConfirmed) {
       try {
-        await axios.delete('http://localhost:9000/data_Delete/deleteAllRecords');
+        await axios.delete('http://65.1.54.123:9000/data_Delete/deleteAllRecords');
         alert('All records deleted successfully!');
       } catch (error) {
         console.error('Error deleting records:', error.message);

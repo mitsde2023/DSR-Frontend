@@ -10,28 +10,13 @@ function GroupWise() {
     const [grupdata, setGroupdata] = useState([]);
     useEffect(() => {
         async function fetchMonth() {
-            const monthsData = await axios.get('http://localhost:9000/dsr_report/api/unique-months');
+            const monthsData = await axios.get('http://65.1.54.123:9000/dsr_report/api/unique-months');
             setMonth(monthsData.data);
         }
         fetchMonth();
     }, [])
 
-    useEffect(() => {
-        const params = {
-            selectedMonth
-        };
-
-        const queryString = Object.keys(params)
-            .filter(key => params[key] !== null && params[key] !== undefined)
-            .map(key => `${key}=${encodeURIComponent(params[key])}`)
-            .join('&');
-        async function fetchTlTmData() {
-            const resData = await axios.get(`http://localhost:9000/dsr_report/group-wise-overall?${queryString}`);
-            setGroupdata(resData.data);
-        }
-        fetchTlTmData();
-    }, [selectedMonth])
-    console.log(month, 23)
+    
     useEffect(() => {
         if (Object.keys(month).length > 0) {
             setSelectedMonth(Object.keys(month)[0]);
@@ -57,6 +42,22 @@ function GroupWise() {
             </select>
         );
     };
+
+    useEffect(() => {
+        const params = {
+            selectedMonth
+        };
+
+        const queryString = Object.keys(params)
+            .filter(key => params[key] !== null && params[key] !== undefined)
+            .map(key => `${key}=${encodeURIComponent(params[key])}`)
+            .join('&');
+        async function fetchTlTmData() {
+            const resData = await axios.get(`http://65.1.54.123:9000/dsr_report/group-wise-overall?${queryString}`);
+            setGroupdata(resData.data);
+        }
+        fetchTlTmData();
+    }, [selectedMonth])
 
     const columns = React.useMemo(
         () => [
@@ -233,7 +234,7 @@ function GroupWise() {
     return (
         <>
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                <span className="navbar-brand d-flex ms-2" href="#">
+                <span className="navbar-brand d-flex ms-2" href="#logo">
                     <img style={{ width: "140px" }} src='https://res.cloudinary.com/dtgpxvmpl/image/upload/v1702100329/mitsde_logo_vmzo63.png' alt="MITSDE logo" />
                     <small>{renderMonthDropdown()}</small>
                 </span>

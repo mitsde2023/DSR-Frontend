@@ -16,7 +16,7 @@ function TltmExclude() {
     useEffect(() => {
         async function fetchHierarchyData() {
             try {
-                const hierarchyData = await axios.get('http://localhost:9000/dsr_report/hierarchical-data-filter');
+                const hierarchyData = await axios.get('http://65.1.54.123:9000/dsr_report/hierarchical-data-filter');
                 setMonth(hierarchyData.data.uniqueMonths);
                 setFilterData(hierarchyData.data.hierarchicalData);
             } catch (error) {
@@ -141,7 +141,7 @@ function TltmExclude() {
 
         const fetchTlTmData = async () => {
             try {
-                const response = await axios.get(`http://localhost:9000/dsr_report/Excluding-TL?${queryString}`);
+                const response = await axios.get(`http://65.1.54.123:9000/dsr_report/Excluding-TL?${queryString}`);
                 const tlTmData = response.data;
                 settltmdata(tlTmData);
             } catch (error) {
@@ -382,7 +382,7 @@ function TltmExclude() {
     return (
         <>
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                <span className="navbar-brand d-flex ms-2" href="#">
+                <span className="navbar-brand d-flex ms-2" href="#home">
                     <img style={{ width: "140px" }} src='https://res.cloudinary.com/dtgpxvmpl/image/upload/v1702100329/mitsde_logo_vmzo63.png' alt="MITSDE logo" />
                     <small className='ms-2'>{renderMonthDropdown()}</small>
                 </span>

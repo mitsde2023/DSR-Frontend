@@ -10,13 +10,13 @@ function GroupWise() {
     const [grupdata, setGroupdata] = useState([]);
     useEffect(() => {
         async function fetchMonth() {
-            const monthsData = await axios.get('http://65.1.54.123:9000/dsr_report/api/unique-months');
+            const monthsData = await axios.get('http://65.1.54.123:8000/dsr_report/api/unique-months');
             setMonth(monthsData.data);
         }
         fetchMonth();
     }, [])
 
-    
+
     useEffect(() => {
         if (Object.keys(month).length > 0) {
             setSelectedMonth(Object.keys(month)[0]);
@@ -53,7 +53,7 @@ function GroupWise() {
             .map(key => `${key}=${encodeURIComponent(params[key])}`)
             .join('&');
         async function fetchTlTmData() {
-            const resData = await axios.get(`http://65.1.54.123:9000/dsr_report/group-wise-overall?${queryString}`);
+            const resData = await axios.get(`http://65.1.54.123:8000/dsr_report/group-wise-overall?${queryString}`);
             setGroupdata(resData.data);
         }
         fetchTlTmData();

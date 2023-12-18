@@ -16,7 +16,7 @@ function CounselorWiseSummary() {
   useEffect(() => {
     async function fetchHierarchyData() {
       try {
-        const hierarchyData = await axios.get('http://65.1.54.123:9000/dsr_report/hierarchical-data-filter');
+        const hierarchyData = await axios.get('http://65.1.54.123:8000/dsr_report/hierarchical-data-filter');
         setMonth(hierarchyData.data.uniqueMonths);
         setFilterData(hierarchyData.data.hierarchicalData);
       } catch (error) {
@@ -141,7 +141,7 @@ function CounselorWiseSummary() {
         .join('&');
 
       try {
-        const response = await axios.get(`http://65.1.54.123:9000/dsr_report/counselor-metrics?${queryString}`);
+        const response = await axios.get(`http://65.1.54.123:8000/dsr_report/counselor-metrics?${queryString}`);
         setData(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import ReactTable from 'react-table-6';
 import * as XLSX from 'xlsx';
 
@@ -12,7 +12,11 @@ function TltmInd() {
     const [selectedSalesManager, setSelectedSalesManager] = useState('');
     const [selectedTeamManager, setSelectedTeamManager] = useState('');
     const [selectedTeamLeader, setSelectedTeamLeader] = useState('');
+    const [showNavbar, setShowNavbar] = useState(false)
 
+    const handleShowNavbar = () => {
+        setShowNavbar(!showNavbar)
+    }
     useEffect(() => {
         async function fetchHierarchyData() {
             try {
@@ -62,6 +66,7 @@ function TltmInd() {
 
         return (
             <select className='nav-link' value={selectedMonth} onChange={handleMonthChange}>
+                <option value={''}>All</option>
                 {options.map((value) => (
                     <option key={value} value={value}>
                         {value}
@@ -159,7 +164,7 @@ function TltmInd() {
             {
                 Header: 'Asst. Manager',
                 accessor: 'SalesManager',
-                width: 130,
+                width: 120,
                 Cell: (row) => {
                     const isSameAsPrevious =
                         row.index > 0 &&
@@ -175,7 +180,7 @@ function TltmInd() {
             {
                 Header: 'Team Manager',
                 accessor: 'TeamManager',
-                width: 140,
+                width: 130,
                 Cell: (row) => {
                     const isSameAsPrevious =
                         row.index > 0 &&
@@ -337,68 +342,52 @@ function TltmInd() {
 
     return (
         <>
-            <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                <span className="navbar-brand d-flex ms-2" href="#logo">
-                    <img style={{ width: "140px" }} src='https://res.cloudinary.com/dtgpxvmpl/image/upload/v1702100329/mitsde_logo_vmzo63.png' alt="MITSDE logo" />
-                    <small className='ms-2'>{renderMonthDropdown()}</small>
-                </span>
 
-                <button
-                    className="navbar-toggler"
-                    type="button"
-                    data-toggle="collapse"
-                    data-target="#navbarNav"
-                    aria-controls="navbarNav"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-                >
-                    <span className="navbar-toggler-icon"></span>
-                </button>
-                <div className="collapse navbar-collapse" id="navbarNav">
-                    <ul className="navbar-nav">
-                        <li className="nav-item active">
-                            <a className="nav-link" href="#home">
-                                <Link to={'/overall-Data-Table'}>Overall</Link>
-                            </a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="#link">
-                                <Link to={'/'}>C-Wise</Link>
-                            </a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="#link">
-                                <Link to={'/tltm'}>TL-TM</Link>
-                            </a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="#link">
-                                <Link to={'/Excluding-TL'}>Ex-TL</Link>
-                            </a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="#link">
-                                <Link to={'/group-wise'}>Group-Wise</Link>
-                            </a>
-                        </li>
-                        <li className="nav-item">
-                            {renderSalesManagerDropdown()}
-                        </li>
-                        <li className="nav-item">
-                            {renderTeamManagerDropdown()}
-                        </li>
-                        <li className="nav-item">
-                            {renderTeamLeaderDropdown()}
-                        </li>
-
-                        <li className='nav-item'>
-                            <p className='nav-link' role="button" onClick={exportToExcel}>Export</p>
-                        </li>
-                    </ul>
+            <nav className="navbar">
+                <div className="container">
+                    <div className="logo">
+                        <img style={{ width: "140px" }} src='https://res.cloudinary.com/dtgpxvmpl/image/upload/v1702100329/mitsde_logo_vmzo63.png' alt="MITSDE logo" />
+                        {/* <small className='ms-2'>{renderMonthDropdown()}</small> */}
+                    </div>
+                    <div className="menu-icon" onClick={handleShowNavbar}>
+                        <span className="navbar-toggler-icon"></span>
+                    </div>
+                    <div className={`nav-elements  ${showNavbar && 'active'}`}>
+                        <ul>
+                            <li>
+                                <NavLink to={'/'}>C-Wise</NavLink>
+                            </li>
+                            <li>
+                                <NavLink to={'/overall'}>overall</NavLink>
+                            </li>
+                            <li>
+                                <NavLink to={'/tltm'}>TL-TM</NavLink>
+                            </li>
+                            <li>
+                                <NavLink to={'/Excluding-TL'}>Exc-TL</NavLink>
+                            </li>
+                            <li>
+                                <NavLink to={'/group-wise'}>Group</NavLink>
+                            </li>
+                            <li>
+                                {renderSalesManagerDropdown()}
+                            </li>
+                            <li>
+                                {renderTeamManagerDropdown()}
+                            </li>
+                            <li>
+                                {renderTeamLeaderDropdown()}
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </nav>
+            <div className='d-flex justify-content-around'>
+                <small className='ms-2'>{renderMonthDropdown()}</small>
+                <span className='heading ps-2 pe-2' style={{ fontSize: "11px" }}>TL/TM- Individual Admission Count</span>
+                <small role="button" onClick={exportToExcel}>Export</small>
 
-            <span className='heading ps-5 pe-5 m-2'>TL /TM- Summary Report ( Individual Admission Count)</span>
+            </div>
             <ReactTable
                 data={tltmdata}
                 columns={columns}
@@ -410,6 +399,9 @@ function TltmInd() {
                     },
                     className: 'custom-header',
                 })}
+                style={{
+                    height: "820px",
+                }}
                 className="-striped -highlight custom-table p-2"
                 getTrProps={(state, rowInfo) => {
                     if (rowInfo && rowInfo.index === tltmdata.length - 1) {

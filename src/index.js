@@ -6,6 +6,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import Footer from './dsr/Footer';
 // import DataTableReact from './dsr/DataTableReact';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -13,6 +14,7 @@ root.render(
     <BrowserRouter>
       {/* <DataTableReact /> */}
       <App />
+      <Footer />
     </ BrowserRouter>
   </React.StrictMode>
 );

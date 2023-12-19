@@ -3,7 +3,7 @@ import ReactTable from 'react-table-6';
 import axios from 'axios';
 import 'react-table-6/react-table.css';
 import * as XLSX from 'xlsx';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 function CounselorWiseSummary() {
   const [data, setData] = useState([]);
   const [filterdata, setFilterData] = useState([]);
@@ -12,7 +12,11 @@ function CounselorWiseSummary() {
   const [selectedSalesManager, setSelectedSalesManager] = useState('');
   const [selectedTeamManager, setSelectedTeamManager] = useState('');
   const [selectedTeamLeader, setSelectedTeamLeader] = useState('');
+  const [showNavbar, setShowNavbar] = useState(false)
 
+  const handleShowNavbar = () => {
+    setShowNavbar(!showNavbar)
+  }
   useEffect(() => {
     async function fetchHierarchyData() {
       try {
@@ -60,9 +64,10 @@ function CounselorWiseSummary() {
     const options = Object.values(month);
 
     return (
-      <select className='nav-link' value={selectedMonth} onChange={handleMonthChange}>
+      <select className='nav-link border' value={selectedMonth} onChange={handleMonthChange}>
+        <option value={''}>All</option>
         {options.map((value) => (
-          <option key={value} value={value}>
+          <option style={{ fontSize: "12px" }} key={value} value={value}>
             {value}
           </option>
         ))}
@@ -177,22 +182,23 @@ function CounselorWiseSummary() {
     {
       Header: 'Counselor',
       accessor: 'Counselor',
-      width: 120,
-      fixed: 'sticky',
-      sticky: 'sticky',
+      width: 110,
+      disableFilters: true,
+      sticky: 'left',
+
     },
     {
       Header: 'Team Leaders',
       accessor: 'TeamLeaders',
-      width: 120,
+      width: 110,
     },
     {
       Header: 'Team Manager',
       accessor: 'TeamManager',
-      width: 120,
+      width: 110,
     },
     {
-      Header: 'S Manager',
+      Header: 'S M',
       accessor: 'SalesManager',
       Cell: ({ value }) => value === 'Jayjeet Deshmukh' ? 'JD' : value,
       width: 50,
@@ -200,12 +206,12 @@ function CounselorWiseSummary() {
     {
       Header: 'Team',
       accessor: 'Team',
-      width: 80,
+      width: 50,
     },
     {
       Header: 'Status',
       accessor: 'Status',
-      width: 70,
+      width: 60,
     },
     {
       Header: 'Target',
@@ -218,7 +224,7 @@ function CounselorWiseSummary() {
       width: 50,
     },
     {
-      Header: 'Collected Revenue',
+      Header: 'Coll Rev',
       accessor: 'CollectedRevenue',
       width: 80,
       Cell: ({ value }) => {
@@ -241,7 +247,7 @@ function CounselorWiseSummary() {
       },
     },
     {
-      Header: 'BilledRevenue',
+      Header: 'Bill Rev',
       accessor: 'BilledRevenue',
       width: 80,
       Cell: ({ value }) => {
@@ -269,7 +275,7 @@ function CounselorWiseSummary() {
       width: 50,
     },
     {
-      Header: '% Achievement',
+      Header: '% Achieve',
       accessor: 'Admissions',
       width: 80,
       Cell: ({ original }) => {
@@ -300,7 +306,7 @@ function CounselorWiseSummary() {
 
 
     {
-      Header: 'Conversion%',
+      Header: 'Con%',
       accessor: 'Admissions',
       width: 70,
       Cell: ({ original }) => calculateConversion(original),
@@ -317,7 +323,7 @@ function CounselorWiseSummary() {
         const cpsr = (collectedRevenue / admissions).toFixed(2);
         return cpsr;
       },
-      id: 'cpsr', // Unique ID for the 'C.PSR' column
+      id: 'cpsr',
     },
     {
       Header: 'B.PSR',
@@ -331,7 +337,7 @@ function CounselorWiseSummary() {
         const bpsr = (billedRevenue / admissions).toFixed(2);
         return bpsr;
       },
-      id: 'bpsr', // Unique ID for the 'B.PSR' column
+      id: 'bpsr',
     },
     {
       Header: 'C-Call',
@@ -341,9 +347,9 @@ function CounselorWiseSummary() {
     {
       Header: 'Talk Time',
       accessor: 'TalkTime',
-      width: 70,
+      width: 80,
       Cell: ({ value }) => {
-        const time = value.split(' ')[1];
+        const time = value.split(' ')[4];
         return <span>{time}</span>;
       },
     },
@@ -355,22 +361,8 @@ function CounselorWiseSummary() {
     {
       Header: 'Group',
       accessor: 'Group',
-      width: 50,
+      width: 40,
     },
-    {
-      Header: 'CounselorWiseSummaries',
-      accessor: 'CounselorWiseSummaries',
-      Cell: ({ original }) => (
-        <select>
-          {original.CounselorWiseSummaries.map((summary, index) => (
-            <option key={index}>
-              {`${summary.AmountReceived}/${summary.AmountBilled}/${summary.Specialization}`}
-            </option>
-          ))}
-        </select>
-      ),
-    },
-
   ];
 
 
@@ -408,92 +400,78 @@ function CounselorWiseSummary() {
     XLSX.utils.book_append_sheet(wb, ws, 'data');
 
     // Save the workbook
-    XLSX.writeFile(wb, 'CounselorWiseSummary.xlsx');
+    XLSX.writeFile(wb, `${selectedMonth}_CounselorWiseSummary.xlsx`);
   };
 
+  // Add styling to the header row
+  const getTheadThProps = (state, rowInfo, column) => ({
+    className: 'custom-header',
+  });
+
+  // Add styling to the first column
+  const getTdProps = (state, rowInfo, column) => ({
+    className: 'custom-column',
+  });
 
 
   return (
 
     <>
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        <span className="navbar-brand d-flex ms-2" href="#home">
-          <img style={{ width: "140px" }} src='https://res.cloudinary.com/dtgpxvmpl/image/upload/v1702100329/mitsde_logo_vmzo63.png' alt="MITSDE logo" />
-          <small className='ms-2'>{renderMonthDropdown()}</small>
-        </span>
-
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav">
-            <li className="nav-item active">
-              <a className="nav-link" href="#home">
-                <Link to={'/overall-Data-Table'}>Overall</Link>
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#link">
-                <Link to={'/'}>C-Wise</Link>
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#link">
-                <Link to={'/tltm'}>TL-TM</Link>
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#link">
-                <Link to={'/Excluding-TL'}>Ex-TL</Link>
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#link">
-                <Link to={'/group-wise'}>Group-Wise</Link>
-              </a>
-            </li>
-            <li className="nav-item">
-              {renderSalesManagerDropdown()}
-            </li>
-            <li className="nav-item">
-              {renderTeamManagerDropdown()}
-            </li>
-            <li className="nav-item">
-              {renderTeamLeaderDropdown()}
-            </li>
-
-            <li className='nav-item'>
-              <p className='nav-link' role="button" onClick={exportToExcel}>Export</p>
-            </li>
-          </ul>
+      <nav className="navbar">
+        <div className="container">
+          <div className="logo">
+            <img style={{ width: "155px" }} src='https://res.cloudinary.com/dtgpxvmpl/image/upload/v1702100329/mitsde_logo_vmzo63.png' alt="MITSDE logo" />
+            {/* <small className='ms-2'>{renderMonthDropdown()}</small> */}
+          </div>
+          <div className="menu-icon" onClick={handleShowNavbar}>
+            <span className="navbar-toggler-icon"></span>
+          </div>
+          <div className={`nav-elements  ${showNavbar && 'active'}`}>
+            <ul>
+              <li>
+                <NavLink to={'/'}>C-Wise</NavLink>
+              </li>
+              <li>
+                <NavLink to={'/overall'}>overall</NavLink>
+              </li>
+              <li>
+                <NavLink to={'/tltm'}>TL-TM</NavLink>
+              </li>
+              <li>
+                <NavLink to={'/Excluding-TL'}>Exc-TL</NavLink>
+              </li>
+              <li>
+                <NavLink to={'/group-wise'}>Group</NavLink>
+              </li>
+              <li>
+                {renderSalesManagerDropdown()}
+              </li>
+              <li>
+                {renderTeamManagerDropdown()}
+              </li>
+              <li>
+                {renderTeamLeaderDropdown()}
+              </li>
+            </ul>
+          </div>
         </div>
       </nav>
-      <hr />
-      <span className='heading ps-5 pe-5 p-1'>Counselor Wise Summary</span>
-
+      <div className='d-flex justify-content-around'>
+        <small className='ms-2'>{renderMonthDropdown()}</small>
+        <span className='heading ps-2 pe-2' style={{ fontSize: "11px" }}>Counselor Wise</span>
+        <small role="button" onClick={exportToExcel}>Export</small>
+      </div>
       <ReactTable
         data={data}
         columns={columns}
-        defaultPageSize={112}
+        defaultPageSize={115}
         pageSizeOptions={[10, 20, 50, 100, 115, 125, 150, 200]}
-        getTheadThProps={(state, rowInfo, column) => ({
-          style: {
-            backgroundColor: 'yellow',
-            position: 'sticky',
-            top: '0',
-            zIndex: '1'
-          },
-          className: 'custom-header',
-        })}
-        className="-striped -highlight custom-table p-2"
+        style={{
+          height: "820px",
+        }}
+        getTheadThProps={getTheadThProps}
+        getTdProps={getTdProps}
+        className="-striped -highlight custom-table"
       />
 
     </>

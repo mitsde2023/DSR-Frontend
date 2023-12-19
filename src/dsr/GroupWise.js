@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import ReactTable from 'react-table-6';
 import * as XLSX from 'xlsx';
 
@@ -8,6 +8,11 @@ function GroupWise() {
     const [month, setMonth] = useState([]);
     const [selectedMonth, setSelectedMonth] = useState('');
     const [grupdata, setGroupdata] = useState([]);
+    const [showNavbar, setShowNavbar] = useState(false)
+
+    const handleShowNavbar = () => {
+        setShowNavbar(!showNavbar)
+    }
     useEffect(() => {
         async function fetchMonth() {
             const monthsData = await axios.get('http://65.1.54.123:8000/dsr_report/api/unique-months');
@@ -34,6 +39,7 @@ function GroupWise() {
 
         return (
             <select className='nav-link' value={selectedMonth} onChange={handleMonthChange}>
+                <option value={''}>All</option>
                 {options.map((value) => (
                     <option key={value} value={value}>
                         {value}
@@ -228,64 +234,48 @@ function GroupWise() {
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
 
-        XLSX.writeFile(wb, 'Group_Wise_Summary.xlsx');
+        XLSX.writeFile(wb, `${selectedMonth}_Group_Wise_Summary.xlsx`);
     };
 
     return (
         <>
-            <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                <span className="navbar-brand d-flex ms-2" href="#logo">
-                    <img style={{ width: "140px" }} src='https://res.cloudinary.com/dtgpxvmpl/image/upload/v1702100329/mitsde_logo_vmzo63.png' alt="MITSDE logo" />
-                    <small>{renderMonthDropdown()}</small>
-                </span>
 
-                <button
-                    className="navbar-toggler"
-                    type="button"
-                    data-toggle="collapse"
-                    data-target="#navbarNav"
-                    aria-controls="navbarNav"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-                >
-                    <span className="navbar-toggler-icon"></span>
-                </button>
-                <div className="collapse navbar-collapse" id="navbarNav">
-                    <ul className="navbar-nav">
-                        <li className="nav-item active">
-                            <a className="nav-link" href="#home">
-                                <Link to={'/overall-Data-Table'}>Overall</Link>
-                            </a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="#link">
-                                <Link to={'/'}>C-Wise</Link>
-                            </a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="#link">
-                                <Link to={'/tltm'}>TL-TM</Link>
-                            </a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="#link">
-                                <Link to={'/Excluding-TL'}>Ex-TL</Link>
-                            </a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="#link">
-                                <Link to={'/group-wise'}>Group-Wise</Link>
-                            </a>
-                        </li>
-                        <li className='nav-item'>
-                            <p className='nav-link' onClick={exportToExcel}>Export</p>
-                        </li>
-                    </ul>
+            <nav className="navbar">
+                <div className="container">
+                    <div className="logo">
+                        <img style={{ width: "140px" }} src='https://res.cloudinary.com/dtgpxvmpl/image/upload/v1702100329/mitsde_logo_vmzo63.png' alt="MITSDE logo" />
+                        {/* <small className='ms-2'>{renderMonthDropdown()}</small> */}
+                    </div>
+                    <div className="menu-icon" onClick={handleShowNavbar}>
+                        <span className="navbar-toggler-icon"></span>
+                    </div>
+                    <div className={`nav-elements  ${showNavbar && 'active'}`}>
+                        <ul>
+                            <li>
+                                <NavLink to={'/'}>C-Wise</NavLink>
+                            </li>
+                            <li>
+                                <NavLink to={'/overall'}>overall</NavLink>
+                            </li>
+                            <li>
+                                <NavLink to={'/tltm'}>TL-TM</NavLink>
+                            </li>
+                            <li>
+                                <NavLink to={'/Excluding-TL'}>Exc-TL</NavLink>
+                            </li>
+                            <li>
+                                <NavLink to={'/group-wise'}>Group</NavLink>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </nav>
-            <hr />
+            <div className='d-flex justify-content-around'>
+                <small className='ms-2'>{renderMonthDropdown()}</small>
+                <span className='heading ps-5 pe-5' style={{ fontSize: "11px" }}>Group Wise</span>
+                <small role="button" onClick={exportToExcel}>Export</small>
 
-            <span className='heading ps-5 pe-5'>Group Wise Overall Summary</span>
+            </div>
             <ReactTable
                 data={grupdata}
                 columns={columns}

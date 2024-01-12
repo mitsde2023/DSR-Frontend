@@ -4,11 +4,11 @@ import axios from 'axios';
 import 'react-table-6/react-table.css';
 import * as XLSX from 'xlsx';
 import { NavLink } from 'react-router-dom';
+import { useMonths } from '../Contexts/MonthsContext';
 function CounselorWiseSummary() {
+  const { months, filterData, crrMonth, fetchFilterData } = useMonths();
+  const [selectedMonth, setSelectedMonth] = useState(crrMonth);
   const [data, setData] = useState([]);
-  const [filterdata, setFilterData] = useState([]);
-  const [month, setMonth] = useState([]);
-  const [selectedMonth, setSelectedMonth] = useState('');
   const [selectedSalesManager, setSelectedSalesManager] = useState('');
   const [selectedTeamManager, setSelectedTeamManager] = useState('');
   const [selectedTeamLeader, setSelectedTeamLeader] = useState('');
@@ -17,19 +17,11 @@ function CounselorWiseSummary() {
   const handleShowNavbar = () => {
     setShowNavbar(!showNavbar)
   }
-  useEffect(() => {
-    async function fetchHierarchyData() {
-      try {
-        const hierarchyData = await axios.get(`http://localhost:8000/dsr_report/hierarchical-data-filter?selectedMonth=${selectedMonth}`);
-        setMonth(hierarchyData.data.uniqueMonths);
-        setFilterData(hierarchyData.data.hierarchicalData);
-      } catch (error) {
-        console.error('Error fetching hierarchical data:', error);
-      }
-    }
 
-    fetchHierarchyData();
+  useEffect(() => {
+    fetchFilterData(selectedMonth);
   }, [selectedMonth]);
+
 
   const handleSalesManagerChange = (event) => {
     const value = event.target.value;
@@ -55,13 +47,8 @@ function CounselorWiseSummary() {
 
   const renderMonthDropdown = () => {
     return (
-      <select
-        className="nav-link"
-        value={selectedMonth}
-        onChange={handleMonthChange}
-      >
-        <option value={""}>All</option>
-        {month.map((entry) => (
+      <select value={selectedMonth} onChange={handleMonthChange}>
+        {months.map((entry) => (
           <option key={entry.id} value={entry.month}>
             {entry.month}
           </option>
@@ -71,7 +58,7 @@ function CounselorWiseSummary() {
   };
 
   const renderSalesManagerDropdown = () => {
-    const salesManagers = Object.keys(filterdata);
+    const salesManagers = Object.keys(filterData);
     const options = salesManagers.map((salesManager) => (
       <option key={salesManager} value={salesManager}>
         {salesManager}
@@ -89,7 +76,7 @@ function CounselorWiseSummary() {
   const renderTeamManagerDropdown = () => {
     if (!selectedSalesManager) return null;
 
-    const filtTeamManagers = filterdata[selectedSalesManager];
+    const filtTeamManagers = filterData[selectedSalesManager];
     const filteredTeamManagers = Object.keys(filtTeamManagers)
     const options = filteredTeamManagers.map((teamManager) => (
       <option key={teamManager} value={teamManager}>
@@ -108,7 +95,7 @@ function CounselorWiseSummary() {
   const renderTeamLeaderDropdown = () => {
     if (!selectedSalesManager || !selectedTeamManager) return null;
 
-    const filtTeamLeaders = filterdata[selectedSalesManager][selectedTeamManager];
+    const filtTeamLeaders = filterData[selectedSalesManager][selectedTeamManager];
     const filteredTeamLeaders = Object.keys(filtTeamLeaders)
     const options = filteredTeamLeaders.map((teamLeader) => (
       <option key={teamLeader} value={teamLeader}>

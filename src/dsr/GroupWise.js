@@ -3,46 +3,30 @@ import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom';
 import ReactTable from 'react-table-6';
 import * as XLSX from 'xlsx';
+import { useMonths } from '../Contexts/MonthsContext';
 
 function GroupWise() {
-    const [month, setMonth] = useState([]);
-    const [selectedMonth, setSelectedMonth] = useState('');
+    const { months, crrMonth } = useMonths();
+
+    const [selectedMonth, setSelectedMonth] = useState(crrMonth);
     const [grupdata, setGroupdata] = useState([]);
     const [showNavbar, setShowNavbar] = useState(false)
+
 
     const handleShowNavbar = () => {
         setShowNavbar(!showNavbar)
     }
-    useEffect(() => {
-        async function fetchMonth() {
-            const monthsData = await axios.get('http://localhost:8000/dsr_report/api/unique-months');
-            setMonth(monthsData.data);
-        }
-        fetchMonth();
-    }, [])
-
-
-    useEffect(() => {
-        if (Object.keys(month).length > 0) {
-            setSelectedMonth(Object.keys(month)[0]);
-        }
-    }, [month]);
-
-
     const handleMonthChange = (event) => {
         const value = event.target.value;
         setSelectedMonth(value);
     };
 
     const renderMonthDropdown = () => {
-        const options = Object.values(month);
-
         return (
-            <select className='nav-link' value={selectedMonth} onChange={handleMonthChange}>
-                <option value={''}>All</option>
-                {options.map((value) => (
-                    <option key={value} value={value}>
-                        {value}
+            <select value={selectedMonth} onChange={handleMonthChange}>
+                {months.map((entry) => (
+                    <option key={entry.id} value={entry.month}>
+                        {entry.month}
                     </option>
                 ))}
             </select>
@@ -149,7 +133,6 @@ function GroupWise() {
                     return <div style={{ color: "white" }}>{value}%</div>;
                 },
                 getProps: (state, rowInfo, column) => {
-
                     if (rowInfo && rowInfo.original) {
                         const admissions = rowInfo.original.Admissions;
                         const target = rowInfo.original.Target;
@@ -170,6 +153,13 @@ function GroupWise() {
                             return {
                                 style: {
                                     background: backgroundColor,
+                                },
+                            };
+                        } else {
+                            // Apply a different style to the last row
+                            return {
+                                style: {
+                                    background:"black"
                                 },
                             };
                         }
@@ -226,7 +216,7 @@ function GroupWise() {
         ],
         []
     );
-    
+
     const exportToExcel = () => {
         const header = columns.map((column) => column.Header);
         const dataToExport = grupdata.map((row) => columns.map((column) => row[column.accessor]));
@@ -245,7 +235,6 @@ function GroupWise() {
                 <div className="container">
                     <div className="logo">
                         <img style={{ width: "140px" }} src='https://res.cloudinary.com/dtgpxvmpl/image/upload/v1702100329/mitsde_logo_vmzo63.png' alt="MITSDE logo" />
-                        {/* <small className='ms-2'>{renderMonthDropdown()}</small> */}
                     </div>
                     <div className="menu-icon" onClick={handleShowNavbar}>
                         <span className="navbar-toggler-icon"></span>

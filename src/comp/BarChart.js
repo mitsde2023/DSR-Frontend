@@ -5,10 +5,8 @@ function BarChart({ data }) {
     const months = Object.keys(data);
 
     if (months.length === 0) {
-        // No data available
         return null;
     }
-
 
     const groupsMonth1 = data[months[0]]
         .filter((item) => item.Group !== 'Grand Total')
@@ -18,7 +16,11 @@ function BarChart({ data }) {
         .filter((item) => item.Group !== 'Grand Total')
         .map((item) => item.Group);
 
-    const combinedGroups = [...new Set([...groupsMonth1, ...groupsMonth2])];
+    const groupsMonth3 = data[months[4]]
+        .filter((item) => item.Group !== 'Grand Total')
+        .map((item) => item.Group);
+
+    const combinedGroups = [...new Set([...groupsMonth1, ...groupsMonth2, ...groupsMonth3])];
 
     console.log(combinedGroups)
     const chartDatas = {

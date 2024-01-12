@@ -5,70 +5,49 @@ import "react-table-6/react-table.css";
 import axios from "axios";
 import * as XLSX from "xlsx";
 import { NavLink } from "react-router-dom";
+import { useMonths } from '../Contexts/MonthsContext';
 
 function OverAllUsingDataTable() {
-    const [month, setMonth] = useState([]);
-    const [selectedMonth, setSelectedMonth] = useState('');
+    const [data, setData] = useState([]);
+    const { months, filterData, crrMonth, fetchFilterData } = useMonths();
+    const [selectedMonth, setSelectedMonth] = useState(crrMonth);
     const [showNavbar, setShowNavbar] = useState(false);
-
+    const [selectedSalesManager, setSelectedSalesManager] = useState('');
+    const [selectedTeamManager, setSelectedTeamManager] = useState('');
+    const [selectedTeamLeader, setSelectedTeamLeader] = useState('');
+    console.log(selectedMonth, 32)
     const handleShowNavbar = () => {
         setShowNavbar(!showNavbar);
     };
-    const [data, setData] = useState([]);
-    const [filterdata, setFilterData] = useState([]);
-
-    const [selectedSalesManager, setSelectedSalesManager] = useState("");
-    const [selectedTeamManager, setSelectedTeamManager] = useState("");
-    const [selectedTeamLeader, setSelectedTeamLeader] = useState("");
 
     useEffect(() => {
-        async function fetchHierarchyData() {
-            try {
-                const hierarchyData = await axios.get(
-                    `http://localhost:8000/dsr_report/hierarchical-data-filter?selectedMonth=${selectedMonth}`
-                );
-                setMonth(hierarchyData.data.uniqueMonths);
-                setFilterData(hierarchyData.data.hierarchicalData);
-            } catch (error) {
-                console.error("Error fetching hierarchical data:", error);
-            }
-        }
-        fetchHierarchyData();
+        fetchFilterData(selectedMonth);
+
     }, [selectedMonth]);
 
     const handleSalesManagerChange = (event) => {
         const value = event.target.value;
-
         setSelectedSalesManager(value);
         setSelectedTeamManager("");
         setSelectedTeamLeader("");
     };
-
     const handleTeamManagerChange = (event) => {
         const value = event.target.value;
         setSelectedTeamManager(value);
         setSelectedTeamLeader("");
     };
-
     const handleTeamLeaderChange = (event) => {
         const value = event.target.value;
         setSelectedTeamLeader(value);
     };
-
     const handleMonthChange = (event) => {
         const value = event.target.value;
         setSelectedMonth(value);
     };
-
     const renderMonthDropdown = () => {
         return (
-            <select
-                className="nav-link"
-                value={selectedMonth}
-                onChange={handleMonthChange}
-            >
-                <option value={""}>All</option>
-                {month.map((entry) => (
+            <select value={selectedMonth} onChange={handleMonthChange}>
+                {months.map((entry) => (
                     <option key={entry.id} value={entry.month}>
                         {entry.month}
                     </option>
@@ -78,13 +57,12 @@ function OverAllUsingDataTable() {
     };
 
     const renderSalesManagerDropdown = () => {
-        const salesManagers = Object.keys(filterdata);
+        const salesManagers = Object.keys(filterData);
         const options = salesManagers.map((salesManager) => (
             <option key={salesManager} value={salesManager}>
                 {salesManager}
             </option>
         ));
-
         return (
             <select
                 className="nav-link"
@@ -99,8 +77,7 @@ function OverAllUsingDataTable() {
 
     const renderTeamManagerDropdown = () => {
         if (!selectedSalesManager) return null;
-
-        const filtTeamManagers = filterdata[selectedSalesManager];
+        const filtTeamManagers = filterData[selectedSalesManager];
         const filteredTeamManagers = Object.keys(filtTeamManagers);
         const options = filteredTeamManagers.map((teamManager) => (
             <option key={teamManager} value={teamManager}>
@@ -122,9 +99,8 @@ function OverAllUsingDataTable() {
 
     const renderTeamLeaderDropdown = () => {
         if (!selectedSalesManager || !selectedTeamManager) return null;
-
         const filtTeamLeaders =
-            filterdata[selectedSalesManager][selectedTeamManager];
+            filterData[selectedSalesManager][selectedTeamManager];
         const filteredTeamLeaders = Object.keys(filtTeamLeaders);
         const options = filteredTeamLeaders.map((teamLeader) => (
             <option key={teamLeader} value={teamLeader}>
@@ -144,6 +120,7 @@ function OverAllUsingDataTable() {
         );
     };
 
+
     useEffect(() => {
         const params = {
             selectedMonth,
@@ -151,34 +128,71 @@ function OverAllUsingDataTable() {
             selectedTeamManager,
             selectedTeamLeader,
         };
-
         const queryString = Object.keys(params)
             .filter((key) => params[key] !== null && params[key] !== undefined)
             .map((key) => `${key}=${encodeURIComponent(params[key])}`)
-            .join("&");
+            .join('&');
+        if (selectedMonth) {
 
-        const fetchData = async () => {
-            try {
-                const response = await axios.get(
-                    `http://localhost:8000/dsr_report/react-table-data?${queryString}`
-                );
-                const allRows = response.data;
-                const lastTwoRows = allRows.slice(0, -2); // Remove the last two rows
-                const lastRow = allRows.slice(-1); // Get the last row
+            const fetchData = async () => {
+                try {
+                    const response = await axios.get(
+                        `http://localhost:8000/dsr_report/react-table-data?${queryString}`
+                    );
+                    const allRows = response.data;
+                    const lastTwoRows = allRows.slice(0, -2);
+                    const lastRow = allRows.slice(-1);
 
-                setData(lastTwoRows.concat(lastRow));
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        };
+                    setData(lastTwoRows.concat(lastRow));
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
+            };
+            fetchData();
+        }
 
-        fetchData();
+
     }, [
         selectedSalesManager,
         selectedTeamManager,
         selectedTeamLeader,
-        selectedMonth,
+        selectedMonth
     ]);
+
+
+    // useEffect(() => {
+    //     const params = {
+    //         selectedMonth,
+    //         selectedSalesManager,
+    //         selectedTeamManager,
+    //         selectedTeamLeader,
+    //     };
+    //     const queryString = Object.keys(params)
+    //         .filter((key) => params[key] !== null && params[key] !== undefined)
+    //         .map((key) => `${key}=${encodeURIComponent(params[key])}`)
+    //         .join("&");
+
+    //     const fetchData = async () => {
+    //         try {
+    //             const response = await axios.get(
+    //                 `http://localhost:8000/dsr_report/react-table-data?${queryString}`
+    //             );
+    //             const allRows = response.data;
+    //             const lastTwoRows = allRows.slice(0, -2); // Remove the last two rows
+    //             const lastRow = allRows.slice(-1); // Get the last row
+
+    //             setData(lastTwoRows.concat(lastRow));
+    //         } catch (error) {
+    //             console.error("Error fetching data:", error);
+    //         }
+    //     };
+    //     fetchData();
+    // }, [
+    //     selectedSalesManager,
+    //     selectedTeamManager,
+    //     selectedTeamLeader,
+    //     selectedMonth,
+    // ]);
 
     const columns = React.useMemo(
         () => [
@@ -314,6 +328,13 @@ function OverAllUsingDataTable() {
                             return {
                                 style: {
                                     background: backgroundColor,
+                                },
+                            };
+                        }else {
+                            // Apply a different style to the last row
+                            return {
+                                style: {
+                                    background:"black"
                                 },
                             };
                         }

@@ -5,7 +5,6 @@ function StackedChart({ data }) {
     const months = Object.keys(data);
 
     if (months.length === 0) {
-      // No data available
       return null;
     }
   

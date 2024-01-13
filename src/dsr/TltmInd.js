@@ -332,7 +332,7 @@ function TltmInd() {
             <nav className="navbar">
                 <div className="container">
                     <div className="logo">
-                        <img style={{ width: "140px" }} src='https://res.cloudinary.com/dtgpxvmpl/image/upload/v1702100329/mitsde_logo_vmzo63.png' alt="MITSDE logo" />
+                        <NavLink to={'/'} ><img style={{ width: "140px" }} src='https://res.cloudinary.com/dtgpxvmpl/image/upload/v1702100329/mitsde_logo_vmzo63.png' alt="MITSDE logo" /></NavLink>
                         {/* <small className='ms-2'>{renderMonthDropdown()}</small> */}
                     </div>
                     <div className="menu-icon" onClick={handleShowNavbar}>
@@ -341,7 +341,7 @@ function TltmInd() {
                     <div className={`nav-elements  ${showNavbar && 'active'}`}>
                         <ul>
                             <li>
-                                <NavLink to={'/'}>C-Wise</NavLink>
+                                <NavLink to={'/Counselor'}>C-Wise</NavLink>
                             </li>
                             <li>
                                 <NavLink to={'/overall'}>overall</NavLink>

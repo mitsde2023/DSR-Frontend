@@ -401,7 +401,9 @@ function CounselorWiseSummary() {
       <nav className="navbar">
         <div className="container">
           <div className="logo">
-            <img style={{ width: "155px" }} src='https://res.cloudinary.com/dtgpxvmpl/image/upload/v1702100329/mitsde_logo_vmzo63.png' alt="MITSDE logo" />
+          <NavLink to={'/'} ><img style={{ width: "155px" }} src='https://res.cloudinary.com/dtgpxvmpl/image/upload/v1702100329/mitsde_logo_vmzo63.png' alt="MITSDE logo" /></NavLink>
+
+            {/* <img style={{ width: "155px" }} src='https://res.cloudinary.com/dtgpxvmpl/image/upload/v1702100329/mitsde_logo_vmzo63.png' alt="MITSDE logo" /> */}
             {/* <small className='ms-2'>{renderMonthDropdown()}</small> */}
           </div>
           <div className="menu-icon" onClick={handleShowNavbar}>

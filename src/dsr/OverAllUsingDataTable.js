@@ -15,7 +15,7 @@ function OverAllUsingDataTable() {
     const [selectedSalesManager, setSelectedSalesManager] = useState('');
     const [selectedTeamManager, setSelectedTeamManager] = useState('');
     const [selectedTeamLeader, setSelectedTeamLeader] = useState('');
-    console.log(selectedMonth, 32)
+    console.log(data.length, 18)
     const handleShowNavbar = () => {
         setShowNavbar(!showNavbar);
     };
@@ -558,17 +558,12 @@ function OverAllUsingDataTable() {
     const tableData = data.concat(grandTotal);
 
 
-
     return (
         <>
             <nav className="navbar">
                 <div className="container">
                     <div className="logo">
-                        <img
-                            style={{ width: "155px" }}
-                            src="https://res.cloudinary.com/dtgpxvmpl/image/upload/v1702100329/mitsde_logo_vmzo63.png"
-                            alt="MITSDE logo"
-                        />
+                    <NavLink to={'/'} ><img style={{ width: "155px" }} src='https://res.cloudinary.com/dtgpxvmpl/image/upload/v1702100329/mitsde_logo_vmzo63.png' alt="MITSDE logo" /></NavLink>
                         {/* <small className='ms-2'>{renderMonthDropdown()}</small> */}
                     </div>
                     <div className="menu-icon" onClick={handleShowNavbar}>
@@ -577,7 +572,7 @@ function OverAllUsingDataTable() {
                     <div className={`nav-elements  ${showNavbar && "active"}`}>
                         <ul>
                             <li>
-                                <NavLink to={"/"}>C-Wise</NavLink>
+                                <NavLink to={"/Counselor"}>C-Wise</NavLink>
                             </li>
                             <li>
                                 <NavLink to={"/overall"}>overall</NavLink>
@@ -607,11 +602,10 @@ function OverAllUsingDataTable() {
                     Export
                 </small>
             </div>
-
             <ReactTable
                 data={tableData}
                 columns={columns}
-                defaultPageSize={42}
+                defaultPageSize={55}
                 pageSizeOptions={[10, 20, 45, 50, 75, 100, 200]}
                 getTheadThProps={(state, rowInfo, column) => ({
                     style: {

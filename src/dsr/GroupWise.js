@@ -234,7 +234,7 @@ function GroupWise() {
             <nav className="navbar">
                 <div className="container">
                     <div className="logo">
-                        <img style={{ width: "140px" }} src='https://res.cloudinary.com/dtgpxvmpl/image/upload/v1702100329/mitsde_logo_vmzo63.png' alt="MITSDE logo" />
+                    <NavLink to={'/'} ><img style={{ width: "140px" }} src='https://res.cloudinary.com/dtgpxvmpl/image/upload/v1702100329/mitsde_logo_vmzo63.png' alt="MITSDE logo" /></NavLink>
                     </div>
                     <div className="menu-icon" onClick={handleShowNavbar}>
                         <span className="navbar-toggler-icon"></span>
@@ -242,7 +242,7 @@ function GroupWise() {
                     <div className={`nav-elements  ${showNavbar && 'active'}`}>
                         <ul>
                             <li>
-                                <NavLink to={'/'}>C-Wise</NavLink>
+                                <NavLink to={'/Counselor'}>C-Wise</NavLink>
                             </li>
                             <li>
                                 <NavLink to={'/overall'}>overall</NavLink>
@@ -269,7 +269,7 @@ function GroupWise() {
             <ReactTable
                 data={grupdata}
                 columns={columns}
-                defaultPageSize={7}
+                defaultPageSize={8}
                 pageSizeOptions={[10, 20, 50, 100]}
                 getTheadThProps={(state, rowInfo, column) => ({
                     style: {

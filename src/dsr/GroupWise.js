@@ -43,7 +43,7 @@ function GroupWise() {
             .map(key => `${key}=${encodeURIComponent(params[key])}`)
             .join('&');
         async function fetchTlTmData() {
-            const resData = await axios.get(`http://localhost:8000/dsr_report/group-wise-overall?${queryString}`);
+            const resData = await axios.get(`http://65.1.54.123:8000/dsr_report/group-wise-overall?${queryString}`);
             setGroupdata(resData.data);
         }
         fetchTlTmData();

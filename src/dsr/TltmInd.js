@@ -127,7 +127,7 @@ function TltmInd() {
 
         const fetchTltmInData = async () => {
             try {
-                const response = await axios.get(`http://localhost:8000/dsr_report/tltm-in?${queryString}`);
+                const response = await axios.get(`http://65.1.54.123:8000/dsr_report/tltm-in?${queryString}`);
                 const tltmInData = response.data;
                 settltmdata(tltmInData);
             } catch (error) {

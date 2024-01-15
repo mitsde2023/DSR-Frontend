@@ -51,7 +51,7 @@ function DashBord() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:8000/dsr_report/admissionsCountByDate/${selectedMonth}`);
+                const response = await axios.get(`http://65.1.54.123:8000/dsr_report/admissionsCountByDate/${selectedMonth}`);
                 setChartData(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -75,7 +75,7 @@ function DashBord() {
                         .map((key) => `${key}=${encodeURIComponent(params[key])}`)
                         .join('&');
 
-                    const resData = await axios.get(`http://localhost:8000/dsr_report/group-wise-overall?${queryString}`);
+                    const resData = await axios.get(`http://65.1.54.123:8000/dsr_report/group-wise-overall?${queryString}`);
                     return { [monthObject.month]: resData.data };
                 });
 
@@ -107,7 +107,7 @@ function DashBord() {
 
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:8000/dsr_report/admissionsCountByDate/${months[0].month}`);
+                const response = await axios.get(`http://65.1.54.123:8000/dsr_report/admissionsCountByDate/${months[0].month}`);
                 setChartData(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);

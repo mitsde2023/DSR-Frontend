@@ -10,11 +10,11 @@ export const MonthsProvider = ({ children }) => {
     useEffect(() => {
         async function fetchData() {
             try {
-                const monthsData = await axios.get('http://localhost:8000/dsr_report/api/unique-monthsID');
+                const monthsData = await axios.get('http://65.1.54.123:8000/dsr_report/api/unique-monthsID');
                 setMonths(monthsData.data);
 
                 const initialFilterData = await axios.get(
-                    `http://localhost:8000/dsr_report/hierarchical-data-filterID?selectedMonth=${monthsData.data[0]?.month || ''}`
+                    `http://65.1.54.123:8000/dsr_report/hierarchical-data-filterID?selectedMonth=${monthsData.data[0]?.month || ''}`
                 );
                 setFilterData(initialFilterData.data.hierarchicalData);
             } catch (error) {
@@ -28,7 +28,7 @@ export const MonthsProvider = ({ children }) => {
     const fetchFilterData = async (selectedMonth) => {
         try {
             const hierarchyData = await axios.get(
-                `http://localhost:8000/dsr_report/hierarchical-data-filterID?selectedMonth=${selectedMonth}`
+                `http://65.1.54.123:8000/dsr_report/hierarchical-data-filterID?selectedMonth=${selectedMonth}`
             );
             setFilterData(hierarchyData.data.hierarchicalData);
         } catch (error) {

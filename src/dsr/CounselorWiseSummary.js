@@ -127,7 +127,7 @@ function CounselorWiseSummary() {
         .join('&');
 
       try {
-        const response = await axios.get(`http://localhost:8000/dsr_report/counselor-metrics?${queryString}`);
+        const response = await axios.get(`http://65.1.54.123:8000/dsr_report/counselor-metrics?${queryString}`);
         setData(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);

@@ -36,7 +36,7 @@ const UploadComponent = () => {
     formData.append('excelFile', excelFile);
 
     try {
-      await axios.post('http://localhost:8000/summary/upload', formData);
+      await axios.post('http://65.1.54.123:8000/summary/upload', formData);
       alert('Excel file uploaded successfully!');
     } catch (error) {
       console.error('Error uploading Excel file:', error.message);
@@ -54,7 +54,7 @@ const UploadComponent = () => {
     formData.append('excelFile', uploadFile);
 
     try {
-      await axios.post('http://localhost:8000/upload', formData);
+      await axios.post('http://65.1.54.123:8000/upload', formData);
       alert('File uploaded successfully!');
     } catch (error) {
       console.error('Error uploading file:', error.message);
@@ -68,7 +68,7 @@ const UploadComponent = () => {
 
     if (isConfirmed) {
       try {
-        await axios.delete('http://localhost:8000/data_Delete/deleteAllRecords');
+        await axios.delete('http://65.1.54.123:8000/data_Delete/deleteAllRecords');
         alert('All records deleted successfully!');
       } catch (error) {
         console.error('Error deleting records:', error.message);

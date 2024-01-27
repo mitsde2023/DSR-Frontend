@@ -4,6 +4,11 @@ import axios from 'axios';
 import { useMonths } from '../Contexts/MonthsContext';
 import AreaChart from './AreaChart';
 import { NavLink } from 'react-router-dom';
+import PieChart from './PieChart';
+import StackedBarChart from './StackedBarChart';
+import LeadToSaleDurationChart from './LeadToSaleDurationChart';
+import SourceCountsChart from './SourceCountsChart';
+import SorcePieChart from './SorcePieChart';
 
 
 function DashBord() {
@@ -15,21 +20,22 @@ function DashBord() {
     const [chartData, setChartData] = useState([]);
     const [selectedMonth, setSelectedMonth] = useState(crrMonth);
     const [showNavbar, setShowNavbar] = useState(false)
+    const [pieChartData, setPieChartData] = useState([])
+    const [pieChartAllData, setPieChartAllData] = useState([])
 
-
+    const [lineChartData, setLineChartData] = useState([])
+    const [sorce, setSoreceData] = useState([])
+    const [crrMSorceData, setCrrMSoreceData] = useState([])
     const handleShowNavbar = () => {
         setShowNavbar(!showNavbar)
     }
-    // const handleMonthChange = (event) => {
-    //     const value = event.target.value;
-    //     setSelectedMonth(value);
-    // };
+
     const handleMonthChange = (event) => {
         const selectedMonth = event.target.value;
         setSelectedMonth(selectedMonth);
         if (monthData) {
             const firstMonthData = monthData[selectedMonth];
-            setFirstMonthData(firstMonthData);
+            // setFirstMonthData(firstMonthData);
             const lastObjectIndex = firstMonthData.length - 1;
             const lastObject = firstMonthData[lastObjectIndex];
             setCurrMonthGTs(lastObject);
@@ -47,6 +53,36 @@ function DashBord() {
         );
     };
 
+    const fetchSorceData = async () => {
+        try {
+            const response = await axios.get('http://65.1.54.123:8000/api/sourceCountsByMonth');
+            setSoreceData(response.data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+    const fetchPieChartData = async () => {
+        try {
+            const response = await axios.get(`http://65.1.54.123:8000/api/leadToSaleDurationCount`);
+            setPieChartData(response.data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+    const fetchAllPieChartSorceData = async () => {
+        try {
+            const response = await axios.get(`http://65.1.54.123:8000/api/allmonthssourceCounts`);
+            setPieChartAllData(response.data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+    useEffect(() => {
+        fetchSorceData();
+        fetchPieChartData();
+        fetchAllPieChartSorceData();
+    }, [])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -59,7 +95,27 @@ function DashBord() {
         };
 
         fetchData();
+        const LeadToSaleDurationChart = async () => {
+            try {
+                const response = await axios.get(`http://65.1.54.123:8000/api/leadToSaleDurationZero/${selectedMonth}`);
+                setLineChartData(response.data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        LeadToSaleDurationChart();
+
+        const fetchSorceDataOfCurrentmonth = async () => {
+            try {
+                const response = await axios.get(`http://65.1.54.123:8000/api/sourceCountsByMonth?month=${selectedMonth}`);
+                setCrrMSoreceData(response.data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        fetchSorceDataOfCurrentmonth();
     }, [selectedMonth]);
+
 
 
     useEffect(() => {
@@ -86,7 +142,7 @@ function DashBord() {
                 if (monthData) {
                     const firstMonth = months.length > 0 ? months[0].month : null;
                     const firstMonthData = combinedData[firstMonth];
-                    setFirstMonthData(firstMonthData);
+                    // setFirstMonthData(firstMonthData);
 
                     const lastObjectIndex = firstMonthData.length - 1;
                     const lastObject = firstMonthData[lastObjectIndex];
@@ -101,7 +157,7 @@ function DashBord() {
         };
 
         if (months.length > 0) {
-            setLoading(true); // Set loading to true before starting data fetching
+            setLoading(true);
             fetchDataForAllMonths();
         }
 
@@ -140,11 +196,6 @@ function DashBord() {
 
     }
 
-    console.log(currMonthGTs, 45)
-    console.log(firstMonthData, 46)
-    console.log(months, 47)
-    console.log(monthData, 48)
-
     const renderProgressBar = () => {
         let progressBarColor;
         let BorderColor;
@@ -168,7 +219,6 @@ function DashBord() {
             </div>
         );
     };
-
     const target = currMonthGTs.Target;
     const admissions = currMonthGTs.Admissions;
     const achievementPercentage = (admissions / target) * 100;
@@ -209,7 +259,7 @@ function DashBord() {
                 <div className="row mt-2">
                     <div className="col-md-12">
                         <div className="row">
-                        <div className="col-md-1">
+                            <div className="col-md-1">
                                 {renderMonthDropdown()}
                             </div>
                             <div className="col-md-3">
@@ -289,6 +339,7 @@ function DashBord() {
                                     </div>
                                 </div>
                             </div>
+
                             <div className="col-md-2">
                                 <div className="card border border-2 border-primary rounded-4">
                                     <div className="card-body">
@@ -327,17 +378,69 @@ function DashBord() {
                     </div>
                 </div>
 
-                {/* Detailed Reports Container */}
-                {/* <div className="row">
-                    <div className="col">
+
+
+                <div className="row mt-3">
+                    <div className="col-md-8 mt-2">
+                        <small>Month wise Admission count Per AgencySource</small>
+
                         <div className="card">
                             <div className="card-body">
-                                <h5 className="card-title">Detailed Reports</h5>
-                                
+                                <p className="card-title">AgencySource</p>
+                                <SourceCountsChart data={sorce} />
                             </div>
                         </div>
                     </div>
-                </div> */}
+                    <div className="col-md-4 mt-2">
+                        <small>% AgencySource<strong> {selectedMonth}</strong></small>
+
+                        <div className="card">
+                            <div className="card-body">
+                                <small className="card-title">{selectedMonth} % </small>
+                                <SorcePieChart data={crrMSorceData} />
+
+                            </div>
+                            <div className="card-body">
+                                <small className="card-title">All Month % </small>
+
+                                <SorcePieChart data={pieChartAllData} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="row mt-3">
+                    <div className="col-md-4 mt-2">
+                        <h6 class="card-subtitle">Month Wise Report:</h6> <small>Count of same Day Lead Converstion</small>
+
+                        <div className="card">
+                            <div className="card-body">
+                                <h5 className="card-title">Same Day Lead Converstion </h5>
+                                <StackedBarChart data={pieChartData} />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-4 mt-2">
+                        <h6 class="card-subtitle">Same Day Lead Converstion:</h6> <small>Same Day Lead Converstion % By Month</small>
+                        <div className="card">
+                            <div className="card-body">
+                                <h5 className="card-title">Count of same day Lead conversion </h5>
+                                <PieChart data={pieChartData} />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-4 mt-2">
+                        <h6 class="card-subtitle">Date Wise Report:</h6> <small>Count of same Day Lead Converstion For <strong> {selectedMonth}</strong></small>
+
+                        <div className="card">
+                            <div className="card-body">
+                                <h5 className="card-title">Same Day Lead Converstion </h5>
+                                <LeadToSaleDurationChart apiData={lineChartData} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </>
     )

@@ -8,10 +8,8 @@ function StackedChart({ data }) {
       return null;
     }
   
-    console.log()
 
   const firstMonthKey = months[0];
-  console.log(firstMonthKey, 14)
 
   const chartData = {
     options: {
@@ -68,8 +66,6 @@ function StackedChart({ data }) {
   return (
     <div>
       <Chart options={chartData.options} series={chartData.series} type="bar" height={350} />
-
-      {/* <Chart options={chartDatas.options} series={chartDatas.series} type="bar" height={350} /> */}
 
     </div>
   );

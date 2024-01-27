@@ -111,7 +111,6 @@ function CounselorWiseSummary() {
     );
   };
 
-  // console.log(selectedSalesManager, selectedTeamManager, selectedTeamLeader, 112)
 
   useEffect(() => {
     const fetchData = async () => {

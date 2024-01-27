@@ -1,35 +1,36 @@
 import React from 'react';
-import Chart from 'react-apexcharts';
+import ReactApexChart from 'react-apexcharts';
 
-function StackedBarChart({ data, month }) {
-  const chartData = {
-    options: {
-      chart: {
-        type: 'bar',
-        stacked: true,
-      },
-      xaxis: {
-        categories: data.slice(0, data.length - 1).map((item) => item.Group),
-      },
+function StackedBarChart({ data }) {
+
+  const chartOptions = {
+    xaxis: {
+      categories: data.map(item => item.Month),
     },
-    series: [
-      {
-        name: 'Admissions',
-        data: data.slice(0, data.length - 1).map((item) => item.Admissions),
-      },
-    ],
+  };
+
+  const chartSeries = [
+    {
+      name: 'LeadToSaleDurationCount',
+      data: data.map(item => item.LeadToSaleDurationCount),
+    },
+  ];
+
+  const chartData = {
+    series: chartSeries,
+    options: chartOptions,
   };
 
   return (
     <>
-      <div className='container'>
-        <div className='row'>
-          <div className='col-6'>
-            <Chart options={chartData.options} series={chartData.series} type="bar" width="500" />
-          </div>
-        </div>
+      <div>
+        <ReactApexChart
+          options={chartData.options}
+          series={chartData.series}
+          type="bar"
+          height="250"
+        />
       </div>
-
     </>
   );
 }

@@ -96,7 +96,6 @@ function OverallSummary() {
       </select>
     );
   };
-  console.log(selectedSalesManager, selectedTeamManager, selectedTeamLeader, 112)
 
 
   return (

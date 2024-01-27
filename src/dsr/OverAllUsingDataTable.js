@@ -15,7 +15,6 @@ function OverAllUsingDataTable() {
     const [selectedSalesManager, setSelectedSalesManager] = useState('');
     const [selectedTeamManager, setSelectedTeamManager] = useState('');
     const [selectedTeamLeader, setSelectedTeamLeader] = useState('');
-    console.log(data.length, 18)
     const handleShowNavbar = () => {
         setShowNavbar(!showNavbar);
     };

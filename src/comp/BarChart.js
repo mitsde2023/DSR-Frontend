@@ -22,7 +22,6 @@ function BarChart({ data }) {
 
     const combinedGroups = [...new Set([...groupsMonth1, ...groupsMonth2, ...groupsMonth3])];
 
-    console.log(combinedGroups)
     const chartDatas = {
         options: {
             chart: {

@@ -9,6 +9,7 @@ import GroupWise from './dsr/GroupWise';
 import UploadComponent from './dsr/UploadComponent';
 import DashBord from './comp/DashBord';
 import { MonthsProvider } from './Contexts/MonthsContext';
+import FormComponent from './dsr/FormComponent';
 
 function App() {
   return (
@@ -21,10 +22,10 @@ function App() {
           <Route exact path="/Excluding-TL" element={<TltmExclude />} />
           <Route exact path="/group-wise" element={<GroupWise />} />
           <Route exact path="/" element={<DashBord />} />
+          <Route exact path="/from" element={<FormComponent />} />
           <Route exact path="/Data-Files" element={<UploadComponent />} />
         </Routes>
       </MonthsProvider>
-
     </div>
   );
 }

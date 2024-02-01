@@ -9,20 +9,22 @@ import StackedBarChart from './StackedBarChart';
 import LeadToSaleDurationChart from './LeadToSaleDurationChart';
 import SourceCountsChart from './SourceCountsChart';
 import SorcePieChart from './SorcePieChart';
+import MonthlyCourseChart from './MonthlyCourseChart';
+import RadialBarChart from './RadialBarChart';
 
 
 function DashBord() {
     const [loading, setLoading] = useState(true);
     const { months, crrMonth } = useMonths()
     const [monthData, setMonthData] = useState({});
-    const [firstMonthData, setFirstMonthData] = useState(null);
+    const [monthCourse, setMonthCourse] = useState([]);
     const [currMonthGTs, setCurrMonthGTs] = useState(null);
     const [chartData, setChartData] = useState([]);
     const [selectedMonth, setSelectedMonth] = useState(crrMonth);
     const [showNavbar, setShowNavbar] = useState(false)
     const [pieChartData, setPieChartData] = useState([])
     const [pieChartAllData, setPieChartAllData] = useState([])
-
+    const [monthlyCourseCounts, setmonthlyCourseCounts]=useState([])
     const [lineChartData, setLineChartData] = useState([])
     const [sorce, setSoreceData] = useState([])
     const [crrMSorceData, setCrrMSoreceData] = useState([])
@@ -43,6 +45,7 @@ function DashBord() {
     };
     const renderMonthDropdown = () => {
         return (
+            <div style={{ position: 'fixed', top: 0, left: 0, zIndex: 1000, width: '40%', background:"transparent" }}>
             <select value={selectedMonth} onChange={handleMonthChange}>
                 {months.map((entry) => (
                     <option key={entry.id} value={entry.month}>
@@ -50,6 +53,7 @@ function DashBord() {
                     </option>
                 ))}
             </select>
+            </div>
         );
     };
 
@@ -78,10 +82,20 @@ function DashBord() {
             console.error('Error fetching data:', error);
         }
     };
+
+    const MonthlyCourseChartData= async () =>{
+        try {
+            const response = await axios.get(`http://65.1.54.123:8000/monthlyCourseCounts`);
+            setmonthlyCourseCounts(response.data);
+        } catch (error) {
+            console.error('Error fetching MonthlyCourseChart data:', error);
+        }
+    }
     useEffect(() => {
         fetchSorceData();
         fetchPieChartData();
         fetchAllPieChartSorceData();
+        MonthlyCourseChartData();
     }, [])
 
     useEffect(() => {
@@ -114,6 +128,17 @@ function DashBord() {
             }
         };
         fetchSorceDataOfCurrentmonth();
+
+        const fetchCorseMonthData = async () => {
+            try {
+                const response = await axios.get(`http://65.1.54.123:8000/monthCourseCounts?month=${selectedMonth}`);
+                setMonthCourse(response.data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchCorseMonthData();
     }, [selectedMonth]);
 
 
@@ -171,6 +196,8 @@ function DashBord() {
         };
 
         fetchData();
+       
+
     }, [months]);
 
 
@@ -438,6 +465,19 @@ function DashBord() {
                                 <LeadToSaleDurationChart apiData={lineChartData} />
                             </div>
                         </div>
+                    </div>
+                </div>
+
+
+                <div className="row mt-3">
+                    <div className="col-md-6 mt-2">
+                    <small>Course Wise Admissions of Months</small>
+
+                     <MonthlyCourseChart data={monthlyCourseCounts}  />
+                    </div>
+                    <div className="col-md-6 mt-2">
+                    <small>Course Wise Admissions of Month<strong> {selectedMonth}</strong></small>
+                     <RadialBarChart data={monthCourse}  />
                     </div>
                 </div>
 

@@ -24,7 +24,7 @@ function DashBord() {
     const [showNavbar, setShowNavbar] = useState(false)
     const [pieChartData, setPieChartData] = useState([])
     const [pieChartAllData, setPieChartAllData] = useState([])
-    const [monthlyCourseCounts, setmonthlyCourseCounts]=useState([])
+    const [monthlyCourseCounts, setmonthlyCourseCounts] = useState([])
     const [lineChartData, setLineChartData] = useState([])
     const [sorce, setSoreceData] = useState([])
     const [crrMSorceData, setCrrMSoreceData] = useState([])
@@ -45,14 +45,14 @@ function DashBord() {
     };
     const renderMonthDropdown = () => {
         return (
-            <div style={{ position: 'fixed', top: 0, left: 0, zIndex: 1000, width: '40%', background:"transparent" }}>
-            <select value={selectedMonth} onChange={handleMonthChange}>
-                {months.map((entry) => (
-                    <option key={entry.id} value={entry.month}>
-                        {entry.month}
-                    </option>
-                ))}
-            </select>
+            <div style={{ position: 'fixed', top: 0, left: 0, zIndex: 1000, width: '40%', background: "transparent" }}>
+                <select value={selectedMonth} onChange={handleMonthChange}>
+                    {months.map((entry) => (
+                        <option key={entry.id} value={entry.month}>
+                            {entry.month}
+                        </option>
+                    ))}
+                </select>
             </div>
         );
     };
@@ -83,7 +83,7 @@ function DashBord() {
         }
     };
 
-    const MonthlyCourseChartData= async () =>{
+    const MonthlyCourseChartData = async () => {
         try {
             const response = await axios.get(`http://65.1.54.123:8000/monthlyCourseCounts`);
             setmonthlyCourseCounts(response.data);
@@ -196,7 +196,7 @@ function DashBord() {
         };
 
         fetchData();
-       
+
 
     }, [months]);
 
@@ -285,10 +285,13 @@ function DashBord() {
             <div className="container-fluid mb-5">
                 <div className="row mt-2">
                     <div className="col-md-12">
+                        {renderMonthDropdown()}
                         <div className="row">
-                            <div className="col-md-1">
-                                {renderMonthDropdown()}
-                            </div>
+
+                            {/* <div className="col-md-1">
+
+                            </div> */}
+
                             <div className="col-md-3">
                                 <div className="card border border-2 border-primary rounded-4">
                                     <div className="card-body">
@@ -367,7 +370,7 @@ function DashBord() {
                                 </div>
                             </div>
 
-                            <div className="col-md-2">
+                            <div className="col-md-3">
                                 <div className="card border border-2 border-primary rounded-4">
                                     <div className="card-body">
                                         <strong className="card-title text-primary">{selectedMonth}</strong>
@@ -471,13 +474,13 @@ function DashBord() {
 
                 <div className="row mt-3">
                     <div className="col-md-6 mt-2">
-                    <small>Course Wise Admissions of Months</small>
+                        <small>Course Wise Admissions of Months</small>
 
-                     <MonthlyCourseChart data={monthlyCourseCounts}  />
+                        <MonthlyCourseChart data={monthlyCourseCounts} />
                     </div>
                     <div className="col-md-6 mt-2">
-                    <small>Course Wise Admissions of Month<strong> {selectedMonth}</strong></small>
-                     <RadialBarChart data={monthCourse}  />
+                        <small>Course Wise Admissions of Month<strong> {selectedMonth}</strong></small>
+                        <RadialBarChart data={monthCourse} />
                     </div>
                 </div>
 

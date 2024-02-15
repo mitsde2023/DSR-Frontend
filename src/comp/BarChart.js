@@ -20,7 +20,11 @@ function BarChart({ data }) {
         .filter((item) => item.Group !== 'Grand Total')
         .map((item) => item.Group);
 
-    const combinedGroups = [...new Set([...groupsMonth1, ...groupsMonth2, ...groupsMonth3])];
+    const groupsMonth4 = data[months[5]]
+        .filter((item) => item.Group !== 'Grand Total')
+        .map((item) => item.Group);
+
+    const combinedGroups = [...new Set([...groupsMonth1, ...groupsMonth2, ...groupsMonth3, ...groupsMonth4])];
 
     const chartDatas = {
         options: {

@@ -8,8 +8,8 @@ import { NavLink } from "react-router-dom";
 import { useMonths } from '../Contexts/MonthsContext';
 
 function OverAllUsingDataTable() {
-    const [data, setData] = useState([]);
     const { months, filterData, crrMonth, fetchFilterData } = useMonths();
+    const [data, setData] = useState([]);
     const [selectedMonth, setSelectedMonth] = useState(crrMonth);
     const [showNavbar, setShowNavbar] = useState(false);
     const [selectedSalesManager, setSelectedSalesManager] = useState('');
@@ -136,7 +136,7 @@ function OverAllUsingDataTable() {
             const fetchData = async () => {
                 try {
                     const response = await axios.get(
-                        `http://localhost:8000/dsr_report/react-table-data?${queryString}`
+                        `http://65.1.54.123:8000/dsr_report/react-table-data?${queryString}`
                     );
                     const allRows = response.data;
                     const lastTwoRows = allRows.slice(0, -2);

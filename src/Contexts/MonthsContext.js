@@ -37,7 +37,7 @@ export const MonthsProvider = ({ children }) => {
     };
 
     return (
-        <MonthsContext.Provider value={{ months, filterData, crrMonth: "Mar24", fetchFilterData }}>
+        <MonthsContext.Provider value={{ months, filterData, crrMonth: 'Mar24', fetchFilterData }}>
             {children}
         </MonthsContext.Provider>
     );

@@ -5,13 +5,17 @@ const MonthsContext = createContext();
 
 export const MonthsProvider = ({ children }) => {
     const [months, setMonths] = useState([]);
-    const [filterData, setFilterData] = useState([]);
+    const [crrMonth, setCrrMonth] = useState('');
 
+    const [filterData, setFilterData] = useState([]);
     useEffect(() => {
         async function fetchData() {
             try {
                 const monthsData = await axios.get('http://65.1.54.123:8000/dsr_report/api/unique-monthsID');
                 setMonths(monthsData.data);
+                if (monthsData) {
+                    setCrrMonth(monthsData.data[0].month)
+                }
 
                 const initialFilterData = await axios.get(
                     `http://65.1.54.123:8000/dsr_report/hierarchical-data-filterID?selectedMonth=${monthsData.data[0]?.month || ''}`
@@ -37,7 +41,7 @@ export const MonthsProvider = ({ children }) => {
     };
 
     return (
-        <MonthsContext.Provider value={{ months, filterData, crrMonth: 'Mar24', fetchFilterData }}>
+        <MonthsContext.Provider value={{ months, filterData, crrMonth: crrMonth, fetchFilterData }}>
             {children}
         </MonthsContext.Provider>
     );
